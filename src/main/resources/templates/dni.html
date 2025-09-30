@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Solicitud de DNI</title>
+  <link rel="stylesheet" th:href="@{/JS/css/dni.css}">
+</head>
+<body>
+<header>Solicitud de Permiso - DNI</header>
+
+<div class="container">
+  <form th:action="@{/dni}" th:object="${solicitud}" method="post">
+
+    <label for="dni">DNI</label>
+    <input type="text" th:field="*{dni}" maxlength="8" required />
+
+    <label for="nombres">Apellidos y Nombres</label>
+    <input type="text" th:field="*{nombres}" maxlength="100" required />
+
+    <label for="celular">Celular</label>
+    <input type="tel" th:field="*{celular}" maxlength="9" required />
+
+   <label for="captcha">Captcha</label>
+    <img src="/CaptchaGenerator" alt="Captcha" style="margin-bottom: 10px;"/>
+    <input type="text" th:field="*{captcha}" maxlength="6" required id="captchaInput" />
+    <div id="captchaError" style="color:red; font-weight:bold; display:none;"></div>
+
+    <div th:if="${errorCaptcha}" style="color:red; font-weight:bold;">
+      <p th:text="${errorCaptcha}"></p>
+    </div>
+
+      <button type="button">Abrir Cámara</button>
+
+    <button type="submit">Siguiente</button>
+  </form>
+</div>
+<script src="/src/main/resources/static/JS/js/dni.js"></script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pago de Permiso - DNI</title>
+    <style>
+        :root {
+            --pnp-green: #002b1c;
+            --pnp-red: #b00020;
+            --pnp-light: #ffffff;
+            --pnp-dark-gray: #333;
+            --pnp-gray: #ccc;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            background: var(--pnp-light);
+            color: var(--pnp-dark-gray);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--pnp-green);
+            color: var(--pnp-light);
+            padding: 1.5rem 2rem;
+            font-weight: 700;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        h2 {
+            color: var(--pnp-green);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .nota {
+            background: #d9ead3;
+            border-left: 5px solid var(--pnp-green);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--pnp-green);
+            border-radius: 8px;
+        }
+
+        .monto {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pnp-green);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        form {
+            border: 1px solid var(--pnp-gray);
+            border-radius: 12px;
+            padding: 2rem;
+            background: #f9f9f9;
+            box-shadow: 0 0 15px rgba(0, 43, 28, 0.1);
+        }
+
+        .metodo-pago {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .metodo-pago label {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--pnp-green);
+            border: 2px solid transparent;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        .metodo-pago input[type="radio"] {
+            display: none;
+        }
+
+        .metodo-pago input[type="radio"]:checked + label {
+            border-color: var(--pnp-green);
+            background-color: #d9ead3;
+        }
+
+        /* Secciones formulario */
+        .section-pago {
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-pago.active {
+            display: flex;
+        }
+
+        /* Formulario tarjeta */
+        #formTarjeta label {
+            font-weight: 600;
+            color: var(--pnp-green);
+            font-size: 1.1rem;
+        }
+
+        #formTarjeta select,
+        #formTarjeta input[type="password"],
+        #formTarjeta input[type="month"] {
+            width: 100%;
+            padding: 15px 18px;
+            font-size: 1.3rem;
+            border-radius: 8px;
+            border: 1px solid var(--pnp-gray);
+            transition: border-color 0.3s;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+        }
+
+        #formTarjeta select:focus,
+        #formTarjeta input[type="password"]:focus,
+        #formTarjeta input[type="month"]:focus {
+            outline: none;
+            border-color: var(--pnp-green);
+        }
+
+        #formTarjeta input[name="tarjeta"],
+        #formTarjeta input[name="cvc"] {
+            font-weight: 700;
+            letter-spacing: 0.15rem;
+            font-size: 1.5rem;
+            padding: 18px 20px;
+            border-radius: 10px;
+        }
+
+        /* Logos bancos */
+        .bancos {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .bancos img {
+            height: 100px;
+            width: auto;
+            max-width: 200px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+            object-fit: contain;
+        }
+
+        .bancos img.selected {
+            border-color: var(--pnp-green);
+            background-color: #d9ead3;
+        }
+
+        #formBanco {
+            padding: 1rem;
+            background: var(--pnp-light);
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 43, 28, 0.1);
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--pnp-green);
+        }
+
+        #codigoBanco {
+            margin-top: 1rem;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: 0.2rem;
+            background: #d9ead3;
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            user-select: all;
+        }
+
+        #formYape {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--pnp-green);
+            min-height: 250px;
+            margin-top: 2rem;
+        }
+
+        #formYape img {
+            margin-top: 1rem;
+            width: 350px;
+            height: 350px;
+            object-fit: contain;
+        }
+
+        #formYape p {
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        #validacionPago {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #d9ead3;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-align: center;
+            color: var(--pnp-green);
+        }
+
+        #formCodigo {
+            margin-top: 2rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #formCodigo label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--pnp-green);
+        }
+
+        #formCodigo input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1.3rem;
+            border-radius: 8px;
+            border: 1px solid var(--pnp-gray);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+        }
+
+        #formCodigo input[type="submit"] {
+            margin-top: 1rem;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: var(--pnp-green);
+            color: var(--pnp-light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #formCodigo input[type="submit"]:hover {
+            background: #004421;
+        }
+
+        #errorCodigo {
+            color: var(--pnp-red);
+            font-weight: 700;
+            margin-top: 0.8rem;
+            text-align: center;
+        }
+    </style>
+    <script th:inline="javascript">
+    function seleccionarMetodo(metodo) {
+        document.querySelectorAll('.section-pago').forEach(s => s.classList.remove('active'));
+        if (metodo === 'tarjeta') {
+            document.getElementById('formTarjeta').classList.add('active');
+        } else if (metodo === 'banco') {
+            document.getElementById('formBanco').classList.add('active');
+        } else if (metodo === 'yape') {
+            document.getElementById('formYape').classList.add('active');
+        }
+    }
+
+    window.addEventListener('load', () => {
+        let metodo = /*[[${metodo}]]*/ 'tarjeta';
+        let banco = /*[[${banco}]]*/ '';
+
+        seleccionarMetodo(metodo);
+
+        if (banco) {
+            const imgBanco = document.querySelector(`.bancos img[data-banco="${banco}"]`);
+            if (imgBanco) {
+                imgBanco.classList.add('selected');
+            }
+        }
+
+        document.querySelectorAll('.bancos img').forEach(img => {
+            img.addEventListener('click', () => {
+                document.querySelectorAll('.bancos img').forEach(i => i.classList.remove('selected'));
+                img.classList.add('selected');
+                document.getElementById('selectBanco').value = img.getAttribute('data-banco');
+                document.getElementById('formPago').submit();
+            });
+        });
+    });
+</script>
+
+</head>
+
+<body>
+    <header>Pago</header>
+
+    <div class="container">
+        <h2>Pago</h2>
+
+        <div class="nota">
+            Nota: Este pago es necesario para poder procesar su registro y otorgarle su permiso.
+        </div>
+
+        <div class="monto">Monto a pagar: S/. 120</div>
+
+        <form id="formPago" method="post" th:action="@{/pago}">
+            <input type="hidden" id="selectedMetodo" th:value="${metodo}" />
+            <input type="hidden" id="selectedBanco" th:value="${banco}" />
+
+            <!-- Método de pago -->
+            <div class="metodo-pago">
+              <input type="radio" id="tarjeta" name="metodo" value="tarjeta"
+                       th:checked="${metodo == 'tarjeta'}" onchange="this.form.submit()">
+                <label for="tarjeta">Tarjeta</label>
+  
+                <input type="radio" id="banco" name="metodo" value="banco"
+                       th:checked="${metodo == 'banco'}" onchange="this.form.submit()">
+                <label for="banco">Banco</label>
+
+                <input type="radio" id="yape" name="metodo" value="yape"
+                       th:checked="${metodo == 'yape'}" onchange="this.form.submit()">
+                <label for="yape">Yape</label>
+            </div>
+
+            <!-- TARJETA -->
+            <div id="formTarjeta" class="section-pago" th:classappend="${metodo == 'tarjeta'} ? ' active'">
+                <label for="bancoTarjeta">Banco</label>
+               <select id="bancoTarjeta" name="banco" required onchange="document.getElementById('formPago').submit()">
+    <option value="" disabled selected>--Seleccione banco--</option>
+    <option value="BBVA" th:selected="${banco == 'BBVA'}">BBVA</option>
+    <option value="Interbank" th:selected="${banco == 'Interbank'}">Interbank</option>
+    <option value="BCP" th:selected="${banco == 'BCP'}">BCP</option>
+</select>
+
+
+                <label for="numeroTarjeta">Número de tarjeta</label>
+                <input type="password" name="tarjeta" id="numeroTarjeta" minlength="16" maxlength="16"
+                       placeholder="0000 0000 0000 0000" required>
+
+                <label for="cvc">Código de seguridad (CVC)</label>
+                <input type="password" name="cvc" id="cvc" minlength="3" maxlength="4" placeholder="000" required>
+
+                <label for="mesAnio">Fecha de expiración</label>
+                <input type="month" name="mesAnio" id="mesAnio" required>
+
+                <div th:if="${metodo == 'tarjeta'}">
+                    <div id="codigoBanco">Código de pago: <span th:text="${codigoPago}"></span></div>
+                    <p>Copie este código y péguelo abajo para validar su pago con tarjeta.</p>
+                </div>
+            </div>
+
+            <!-- BANCO -->
+            <div id="formBanco" class="section-pago" th:classappend="${metodo == 'banco'} ? ' active'">
+                <label>Seleccione un banco para el pago:</label>
+                <div class="bancos">
+                    <img src="https://gestion.pe/resizer/8x2AlIgYkCU3SG-UJ2-HozYZKCc=/1200x583/smart/filters:format(jpeg):quality(75)/arc-anglerfish-arc2-prod-elcomercio.s3.amazonaws.com/public/YHZXKA5EN5CCNO3IYKOSJARW7M.jpg" data-banco="BBVA" alt="BBVA">
+                    <img src="https://images.seeklogo.com/logo-png/28/1/interbank-2015-logo-png_seeklogo-285084.png" data-banco="Interbank" alt="Interbank">
+                    <img src="https://www.logotypes101.com/logos/611/B437AB14955AB7689AD24FC300E95928/bcp__logo_2014.png" data-banco="BCP" alt="BCP">
+                </div>
+                <input type="hidden" id="selectBanco" name="banco" th:value="${banco}" />
+
+                <div th:if="${metodo == 'banco' and banco != null}">
+                    <div id="codigoBanco">Código de pago: <span th:text="${codigoPago}"></span></div>
+                    <p>Realice su pago con el código indicado en la banca del banco <span th:text="${banco}"></span>.</p>
+                </div>
+            </div>
+
+            <!-- YAPE -->
+            <div id="formYape" class="section-pago" th:classappend="${metodo == 'yape'} ? ' active'">
+                <div th:if="${metodo == 'yape'}">
+                    <p>Escanee el código QR para pagar con Yape:</p>
+<img src="/JS/imagenes/yape.jpg" alt="Yape QR" />
+                    <p><strong>Cuenta Yape:</strong> Banco de la Nación</p>
+                    <div id="codigoBanco">Código de pago: <span th:text="${codigoPago}"></span></div>
+                    <p>Después de pagar, ingrese el código para validar.</p>
+                </div>
+            </div>
+        </form>
+
+        <!-- VALIDACIÓN DEL CÓDIGO -->
+        <div th:if="${!pagoValidado}">
+            <form id="formCodigo" method="post" th:action="@{/pago}">
+                <label for="codigoIngresado">Ingrese el código de pago para validar:</label>
+                <input type="text" id="codigoIngresado" name="codigoIngresado" maxlength="8" required>
+                <input type="hidden" name="metodo" th:value="${metodo}" />
+                <input type="hidden" name="banco" th:value="${banco}" />
+                <input type="submit" value="Validar código" />
+                <div id="errorCodigo" th:if="${errorCodigo}" th:text="${errorCodigo}"></div>
+            </form>
+        </div>
+
+        <!-- VALIDADO -->
+        <div id="validacionPago" th:if="${pagoValidado}">
+            ¡Pago validado correctamente! Gracias por su pago.<br><br>
+            <form th:action="@{/lunas}" method="post">
+                <input type="hidden" name="dni" th:value="${session.dni}" />
+                <input type="hidden" name="apellidos_nombres" th:value="${session.apellidos_nombres}" />
+                <input type="hidden" name="numero_licencia" th:value="${session.numero_licencia}" />
+                <input type="hidden" name="placa" th:value="${session.placa}" />
+                <input type="hidden" name="compania" th:value="${session.compania}" />
+                <input type="hidden" name="vin" th:value="${session.vin}" />
+                <input type="hidden" name="motor" th:value="${session.motor}" />
+                <input type="hidden" name="modelo" th:value="${session.modelo}" />
+                <input type="hidden" name="color" th:value="${session.color}" />
+                <input type="hidden" name="fechaFin" th:value="${session.fechaFin}" />
+                <button type="submit">Ver PDF</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

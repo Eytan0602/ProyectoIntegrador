@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Licencia - Paso 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" th:href="@{/JS/css/licencia.css}" />
+  <script th:src="@{/JS/js/licencia.js}" defer></script>
+  <script th:inline="javascript">
+    const dni = /*[[${dni}]]*/ "";
+  </script>
+</head>
+<body>
+  <header>Formulario Licencia</header>
+  <div class="container">
+    <section class="form-container">
+<form th:action="@{/licencia}" method="post">
+        <label for="dni">DNI</label>
+        <input type="text" id="dni" name="dni" th:value="${dni}" />
+
+        <label for="nombre_completo">Nombre Completo</label>
+        <input type="text" id="nombre_completo" name="nombre_completo" th:value="${nombre_completo}" />
+
+        <label for="numero_licencia">Número de Licencia</label>
+        <input type="text" id="numero_licencia" name="numero_licencia" th:value="${numero_licencia}" />
+
+        <label for="categoria">Categoría</label>
+        <input type="text" id="categoria" name="categoria" th:value="${categoria}" />
+
+        <label for="fecha_expedicion">Fecha de Emisión</label>
+        <input type="text" id="fecha_expedicion" name="fecha_expedicion" th:value="${fecha_expedicion}" />
+
+        <label for="fecha_vencimiento">Fecha de Vencimiento</label>
+        <input type="text" id="fecha_vencimiento" name="fecha_vencimiento" th:value="${fecha_vencimiento}" />
+
+        <label for="estado">Estado</label>
+        <input type="text" id="estado" name="estado" th:value="${estado}" readonly />
+
+        <label for="restricciones">Restricciones</label>
+        <input type="text" id="restricciones" name="restricciones" th:value="${restricciones}" />
+
+        <button type="submit">Siguiente</button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

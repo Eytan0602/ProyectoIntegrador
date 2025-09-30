@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro SOAT</title>
+ <link rel="stylesheet" href="{/JS/css/soat.css}">
+</head>
+<body>
+<style>
+    :root {
+          --pnp-green: #002b1c;
+          --pnp-red: #b00020;
+          --pnp-light: #ffffff;
+          --pnp-dark-gray: #333;
+          --pnp-gray: #ccc;
+        }
+
+        body {
+          margin: 0;
+          font-family: system-ui, sans-serif;
+          background: var(--pnp-light);
+          color: var(--pnp-dark-gray);
+        }
+
+        header {
+          background-color: var(--pnp-green);
+          color: var(--pnp-light);
+          padding: 1rem;
+          text-align: center;
+          font-weight: 700;
+          font-size: 1.8rem;
+        }
+
+        .container {
+          max-width: 700px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+        }
+
+        .form-container {
+          background: #f9f9f9;
+          border: 1px solid var(--pnp-gray);
+          border-radius: 10px;
+          padding: 2rem;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          color: var(--pnp-green);
+        }
+
+        input[type="text"], input[type="date"] {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 1.5rem;
+          border: 1px solid var(--pnp-gray);
+          border-radius: 6px;
+          font-size: 1rem;
+        }
+
+        input:focus {
+          outline: none;
+          border-color: var(--pnp-green);
+        }
+
+        button[type="submit"] {
+          width: 100%;
+          padding: 1rem;
+          background: var(--pnp-green);
+          color: var(--pnp-light);
+          font-size: 1.2rem;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        button[type="submit"]:hover {
+          background: #00441a;
+        }
+</style>
+<header>Registro Vehicular - SOAT</header>
+
+<div class="container">
+  <section class="form-container">
+    <form th:action="@{/soat}" method="post" th:object="${soat}">
+      
+      <label for="placa">Placa del Vehículo</label>
+      <input type="text" id="placa" name="placa" th:value="*{placa}" readonly />
+      
+      <label for="compania">Nombre de la Compañía</label>
+      <input type="text" id="compania" name="compania" th:value="*{compania}" required />
+      
+      <label for="fechaInicio">Fecha de Inicio</label>
+      <input type="date" id="fechaInicio" name="fechaInicio" th:value="*{fechaInicio}" required />
+      
+      <label for="fechaFin">Fecha de Fin</label>
+      <input type="date" id="fechaFin" name="fechaFin" th:value="*{fechaFin}" required />
+      
+      <label for="estado">Estado</label>
+      <input type="text" id="estado" name="estado" th:value="*{estado}" required />
+      
+      <label for="numPoliza">Número de Póliza</label>
+      <input type="text" id="numPoliza" name="numPoliza" th:value="*{numPoliza}" required />
+      
+      <label for="codigoSbs">Código SBS Aseguradora</label>
+      <input type="text" id="codigoSbs" name="codigoSbs" th:value="*{codigoSbs}" required />
+      
+      <button type="submit">Siguiente</button>
+    </form>
+  </section>
+</div>
+
+</body>
+</html>

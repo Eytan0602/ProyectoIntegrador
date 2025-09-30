@@ -1,0 +1,33 @@
+:root {
+      --pnp-green: #002b1c;
+      --pnp-red: #b00020;
+      --pnp-light: #ffffff;
+      --pnp-dark-gray: #333;
+      --pnp-gray: #ccc;
+    }
+    body {
+         margin: 0; font-family: system-ui, sans-serif; background: var(--pnp-light); color: var(--pnp-dark-gray); 
+        }
+    header {
+         background: var(--pnp-green); color: var(--pnp-light); padding: 1rem; text-align: center; font-weight: 700; font-size: 1.8rem;
+         }
+    .container {
+         max-width: 700px; margin: 2rem auto; padding: 0 1rem;
+         }
+    .form-container {
+         background: #f9f9f9; border: 1px solid var(--pnp-gray); border-radius: 10px; padding: 2rem; box-shadow: 0 0 10px rgba(0,0,0,.1);
+         }
+    label { 
+        
+        display: block; margin-bottom: .5rem; font-weight: 600; color: var(--pnp-green);
+     }
+    input[type="text"], input[type="number"] {
+         width: 100%; padding: 10px; margin-bottom: 1.5rem; border: 1px solid var(--pnp-gray); border-radius: 6px; font-size: 1rem;
+         }
+    input:focus {
+         border-color: var(--pnp-green); outline: none; }
+    button {
+         width: 100%; padding: 1rem; background: var(--pnp-green); color: var(--pnp-light); 
+         font-size: 1.2rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: .5rem; }
+    button:hover { background: #00441a; 
+    }

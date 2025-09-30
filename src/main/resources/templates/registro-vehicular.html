@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro Vehicular - Permisos</title>
+    <link rel="stylesheet" th:href="@{/JS/css/registro.css}">
+
+  </head>
+<body>
+
+  <header>Registro Vehicular - Paso 3</header>
+
+  <div class="container">
+    <section class="form-container">
+      <form th:action="@{/registro-vehicular}" method="post">
+        <label for="placa">Placa del Vehículo</label>
+        <input type="text" id="placa" name="placa" maxlength="10" required 
+               th:value="${placa}" 
+               onblur="buscarDatosVehiculo()" />
+
+        <label for="marca">Marca</label>
+        <input type="text" id="marca" name="marca" 
+               th:value="${marca}" />
+
+        <label for="modelo">Modelo</label>
+        <input type="text" id="modelo" name="modelo" required
+               th:value="${modelo}" />
+
+        <label for="anio">Año</label>
+        <input type="number" id="anio" name="anio"
+               th:value="${anio}" />
+
+        <label for="motor">Número de Motor</label>
+        <input type="text" id="motor" name="motor" required
+               th:value="${motor}" />
+
+        <label for="serie">Número de Serie</label>
+        <input type="text" id="serie" name="serie" required
+               th:value="${serie}" />
+
+        <label for="vin">Número VIN</label>
+        <input type="text" id="vin" name="vin" required
+               th:value="${vin}" />
+
+        <button type="button">Abrir Cámara</button>
+        <button type="submit">Siguiente</button>
+      </form>     
+    </section>
+  </div>
+<script th:src="@{/JS/js/licencia.js}" defer></script>
+</body>
+</html>
