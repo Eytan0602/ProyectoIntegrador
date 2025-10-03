@@ -3,117 +3,797 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registro SOAT</title>
- <link rel="stylesheet" href="{/JS/css/soat.css}">
+  <title>Registro SOAT - Policía Nacional del Perú</title>
+  <meta name="description" content="Registro de datos del SOAT" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --accent-green: #28a745;
+      --accent-yellow: #ffc107;
+      --accent-dark: #1a472a;
+      --border-color: #dee2e6;
+      --error-color: #dc3545;
+      --success-color: #28a745;
+      --shadow: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-hover: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --bg-card: #2d2d2d;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --accent-dark: #28a745;
+      --border-color: #404040;
+      --shadow: 0 4px 6px rgba(0,0,0,0.3);
+      --shadow-hover: 0 8px 16px rgba(0,0,0,0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.6;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--bg-card);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+
+    .container-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .branding {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .site-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .theme-toggle i {
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .breadcrumb a {
+      color: var(--accent-green);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .breadcrumb a:hover {
+      color: #218838;
+    }
+
+    .form-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .form-header .icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--accent-green), #218838);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    .form-header .icon i {
+      font-size: 2rem;
+      color: white;
+    }
+
+    .form-header h1 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .form-group label .required {
+      color: var(--error-color);
+      margin-left: 0.25rem;
+    }
+
+    .input-icon {
+      position: relative;
+    }
+
+    .input-icon i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 3rem;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    }
+
+    .form-control.error {
+      border-color: var(--error-color);
+    }
+
+    .form-control:disabled,
+    .form-control[readonly] {
+      background: var(--bg-secondary);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: none;
+      font-weight: 500;
+    }
+
+    .form-control.error + .error-message {
+      display: block;
+    }
+
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .alert-error {
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid var(--error-color);
+      color: var(--error-color);
+    }
+
+    .alert-success {
+      background: rgba(40, 167, 69, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+
+    .alert i {
+      font-size: 1.25rem;
+    }
+
+    /* Info Box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(33, 136, 56, 0.05));
+      border: 1px solid var(--accent-green);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-box h3 {
+      color: var(--accent-green);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .info-box ul {
+      margin-left: 1.5rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* Form Grid */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Buttons */
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--border-color);
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--accent-green);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border-color);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--accent-dark);
+      color: white;
+      padding: 2rem;
+      margin-top: 4rem;
+      text-align: center;
+    }
+
+    footer p {
+      opacity: 0.9;
+      margin: 0.25rem 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+        margin: 2rem auto;
+      }
+
+      .form-card {
+        padding: 1.5rem;
+      }
+
+      .branding {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .logo img {
+        width: 50px;
+        height: 50px;
+      }
+
+      .site-title {
+        font-size: 1.25rem;
+      }
+
+      .form-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 45px;
+        height: 45px;
+      }
+
+      .breadcrumb {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<style>
-    :root {
-          --pnp-green: #002b1c;
-          --pnp-red: #b00020;
-          --pnp-light: #ffffff;
-          --pnp-dark-gray: #333;
-          --pnp-gray: #ccc;
-        }
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </button>
 
-        body {
-          margin: 0;
-          font-family: system-ui, sans-serif;
-          background: var(--pnp-light);
-          color: var(--pnp-dark-gray);
-        }
+  <header>
+    <div class="container-header branding">
+      <div class="logo">
+        <img src="/JS/imagenes/images.png" alt="Escudo Nacional del Perú">
+      </div>
+      <div>
+        <h1 class="site-title">Policía Nacional del Perú</h1>
+      </div>
+    </div>
+  </header>
 
-        header {
-          background-color: var(--pnp-green);
-          color: var(--pnp-light);
-          padding: 1rem;
-          text-align: center;
-          font-weight: 700;
-          font-size: 1.8rem;
-        }
+  <div class="container">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/"><i class="fas fa-home"></i> Inicio</a>
+      <span><i class="fas fa-chevron-right"></i></span>
+      <a href="/dni"><i class="fas fa-id-card"></i> Validación DNI</a>
+      <span><i class="fas fa-chevron-right"></i></span>
+      <a href="/licencia"><i class="fas fa-car"></i> Licencia</a>
+      <span><i class="fas fa-chevron-right"></i></span>
+      <a href="/registro-vehicular"><i class="fas fa-car-side"></i> Registro Vehicular</a>
+      <span><i class="fas fa-chevron-right"></i></span>
+      <span>SOAT</span>
+    </nav>
 
-        .container {
-          max-width: 700px;
-          margin: 2rem auto;
-          padding: 0 1rem;
-        }
+    <div class="info-box">
+      <h3><i class="fas fa-info-circle"></i> Información Importante</h3>
+      <ul>
+        <li>El SOAT es obligatorio para circular en Perú</li>
+        <li>Verifique que los datos de su póliza sean correctos</li>
+        <li>La fecha de fin debe ser posterior a la fecha de inicio</li>
+        <li>Mantenga su SOAT vigente para evitar multas</li>
+      </ul>
+    </div>
 
-        .form-container {
-          background: #f9f9f9;
-          border: 1px solid var(--pnp-gray);
-          border-radius: 10px;
-          padding: 2rem;
-          box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+    <div class="form-card">
+      <div class="form-header">
+        <div class="icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h1>Registro de SOAT</h1>
+        <p>Complete la información del Seguro Obligatorio de Accidentes de Tránsito</p>
+      </div>
 
-        label {
-          display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 600;
-          color: var(--pnp-green);
-        }
+      <form th:action="@{/soat}" method="post" th:object="${soat}" id="soatForm">
+        
+        <div class="form-group">
+          <label for="placa">
+            Placa del Vehículo
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-id-badge"></i>
+            <input 
+              type="text" 
+              id="placa" 
+              name="placa" 
+              th:value="*{placa}"
+              class="form-control" 
+              readonly
+            />
+          </div>
+        </div>
 
-        input[type="text"], input[type="date"] {
-          width: 100%;
-          padding: 10px;
-          margin-bottom: 1.5rem;
-          border: 1px solid var(--pnp-gray);
-          border-radius: 6px;
-          font-size: 1rem;
-        }
+        <div class="form-group">
+          <label for="compania">
+            Nombre de la Compañía Aseguradora <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-building"></i>
+            <input 
+              type="text" 
+              id="compania" 
+              name="compania" 
+              th:value="*{compania}"
+              class="form-control" 
+              placeholder="Ej: Rimac Seguros, Pacífico, La Positiva"
+              required
+            />
+          </div>
+          <span class="error-message">El nombre de la compañía es obligatorio</span>
+        </div>
 
-        input:focus {
-          outline: none;
-          border-color: var(--pnp-green);
-        }
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fechaInicio">
+              Fecha de Inicio de Vigencia <span class="required">*</span>
+            </label>
+            <div class="input-icon">
+              <i class="fas fa-calendar-check"></i>
+              <input 
+                type="date" 
+                id="fechaInicio" 
+                name="fechaInicio" 
+                th:value="*{fechaInicio}"
+                class="form-control"
+                required
+                style="padding-left: 3rem;"
+              />
+            </div>
+            <span class="error-message">La fecha de inicio es obligatoria</span>
+          </div>
 
-        button[type="submit"] {
-          width: 100%;
-          padding: 1rem;
-          background: var(--pnp-green);
-          color: var(--pnp-light);
-          font-size: 1.2rem;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 700;
-        }
+          <div class="form-group">
+            <label for="fechaFin">
+              Fecha de Fin de Vigencia <span class="required">*</span>
+            </label>
+            <div class="input-icon">
+              <i class="fas fa-calendar-times"></i>
+              <input 
+                type="date" 
+                id="fechaFin" 
+                name="fechaFin" 
+                th:value="*{fechaFin}"
+                class="form-control"
+                required
+                style="padding-left: 3rem;"
+              />
+            </div>
+            <span class="error-message">La fecha de fin es obligatoria</span>
+          </div>
+        </div>
 
-        button[type="submit"]:hover {
-          background: #00441a;
-        }
-</style>
-<header>Registro Vehicular - SOAT</header>
+        <div class="form-group">
+          <label for="estado">
+            Estado del SOAT <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-check-circle"></i>
+            <select 
+              id="estado" 
+              name="estado" 
+              th:value="*{estado}"
+              class="form-control"
+              required
+              style="padding-left: 3rem;"
+            >
+              <option value="">Seleccione el estado</option>
+              <option value="VIGENTE">VIGENTE</option>
+              <option value="POR VENCER">POR VENCER</option>
+              <option value="VENCIDO">VENCIDO</option>
+              <option value="CANCELADO">CANCELADO</option>
+            </select>
+          </div>
+          <span class="error-message">Debe seleccionar un estado</span>
+        </div>
 
-<div class="container">
-  <section class="form-container">
-    <form th:action="@{/soat}" method="post" th:object="${soat}">
+        <div class="form-group">
+          <label for="numPoliza">
+            Número de Póliza <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-file-contract"></i>
+            <input 
+              type="text" 
+              id="numPoliza" 
+              name="numPoliza" 
+              th:value="*{numPoliza}"
+              class="form-control" 
+              placeholder="Ingrese el número de póliza"
+              required
+            />
+          </div>
+          <span class="error-message">El número de póliza es obligatorio</span>
+        </div>
+
+        <div class="form-group">
+          <label for="codigoSbs">
+            Código SBS de la Aseguradora <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-hashtag"></i>
+            <input 
+              type="text" 
+              id="codigoSbs" 
+              name="codigoSbs" 
+              th:value="*{codigoSbs}"
+              class="form-control" 
+              placeholder="Código de 4 dígitos"
+              maxlength="4"
+              pattern="[0-9]{4}"
+              required
+            />
+          </div>
+          <span class="error-message">El código SBS debe tener 4 dígitos</span>
+        </div>
+
+        <div class="form-actions">
+          <a href="/registro-vehicular" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Volver
+          </a>
+          <button type="submit" class="btn btn-primary">
+            Finalizar Registro
+            <i class="fas fa-check"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+  <script>
+    // Theme Toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
-      <label for="placa">Placa del Vehículo</label>
-      <input type="text" id="placa" name="placa" th:value="*{placa}" readonly />
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
       
-      <label for="compania">Nombre de la Compañía</label>
-      <input type="text" id="compania" name="compania" th:value="*{compania}" required />
-      
-      <label for="fechaInicio">Fecha de Inicio</label>
-      <input type="date" id="fechaInicio" name="fechaInicio" th:value="*{fechaInicio}" required />
-      
-      <label for="fechaFin">Fecha de Fin</label>
-      <input type="date" id="fechaFin" name="fechaFin" th:value="*{fechaFin}" required />
-      
-      <label for="estado">Estado</label>
-      <input type="text" id="estado" name="estado" th:value="*{estado}" required />
-      
-      <label for="numPoliza">Número de Póliza</label>
-      <input type="text" id="numPoliza" name="numPoliza" th:value="*{numPoliza}" required />
-      
-      <label for="codigoSbs">Código SBS Aseguradora</label>
-      <input type="text" id="codigoSbs" name="codigoSbs" th:value="*{codigoSbs}" required />
-      
-      <button type="submit">Siguiente</button>
-    </form>
-  </section>
-</div>
+      const icon = document.getElementById('themeIcon');
+      icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
 
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      const icon = document.getElementById('themeIcon');
+      icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    });
+
+    document.getElementById('codigoSbs').addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      if (this.value.length === 4) {
+        this.classList.remove('error');
+      }
+    });
+
+    document.getElementById('fechaFin').addEventListener('change', function() {
+      const fechaInicio = document.getElementById('fechaInicio').value;
+      const fechaFin = this.value;
+      
+      if (fechaInicio && fechaFin && fechaFin <= fechaInicio) {
+        alert('La fecha de fin debe ser posterior a la fecha de inicio');
+        this.value = '';
+        this.classList.add('error');
+      } else {
+        this.classList.remove('error');
+      }
+    });
+
+    document.getElementById('fechaFin').addEventListener('change', actualizarEstado);
+    document.getElementById('fechaInicio').addEventListener('change', actualizarEstado);
+
+    function actualizarEstado() {
+      const fechaFin = document.getElementById('fechaFin').value;
+      const estadoSelect = document.getElementById('estado');
+      
+      if (fechaFin) {
+        const hoy = new Date();
+        const vencimiento = new Date(fechaFin);
+        const diasRestantes = Math.ceil((vencimiento - hoy) / (1000 * 60 * 60 * 24));
+        
+        if (diasRestantes < 0) {
+          estadoSelect.value = 'VENCIDO';
+        } else if (diasRestantes <= 30) {
+          estadoSelect.value = 'POR VENCER';
+        } else {
+          estadoSelect.value = 'VIGENTE';
+        }
+      }
+    }
+
+//VALIDACIONES
+    document.getElementById('soatForm').addEventListener('submit', function(e) {
+      const compania = document.getElementById('compania').value;
+      const fechaInicio = document.getElementById('fechaInicio').value;
+      const fechaFin = document.getElementById('fechaFin').value;
+      const estado = document.getElementById('estado').value;
+      const numPoliza = document.getElementById('numPoliza').value;
+      const codigoSbs = document.getElementById('codigoSbs').value;
+      
+      let hasError = false;
+
+      if (!compania.trim()) {
+        document.getElementById('compania').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('compania').classList.remove('error');
+      }
+
+      if (!fechaInicio) {
+        document.getElementById('fechaInicio').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('fechaInicio').classList.remove('error');
+      }
+
+      if (!fechaFin) {
+        document.getElementById('fechaFin').classList.add('error');
+        hasError = true;
+      } else if (fechaFin <= fechaInicio) {
+        document.getElementById('fechaFin').classList.add('error');
+        alert('La fecha de fin debe ser posterior a la fecha de inicio');
+        hasError = true;
+      } else {
+        document.getElementById('fechaFin').classList.remove('error');
+      }
+
+      if (!estado) {
+        document.getElementById('estado').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('estado').classList.remove('error');
+      }
+
+      if (!numPoliza.trim()) {
+        document.getElementById('numPoliza').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('numPoliza').classList.remove('error');
+      }
+
+      if (codigoSbs.length !== 4 || !/^\d+$/.test(codigoSbs)) {
+        document.getElementById('codigoSbs').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('codigoSbs').classList.remove('error');
+      }
+
+      if (hasError) {
+        e.preventDefault();
+        alert('Por favor, complete todos los campos obligatorios correctamente.');
+      }
+    });
+  </script>
 </body>
 </html>

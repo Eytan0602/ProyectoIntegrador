@@ -1,7 +1,9 @@
 package com.pnp.portal.controller;
 
 import com.pnp.portal.model.SolicitudDni;
+import com.pnp.portal.repository.SolicitudDniRepository;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class DniController {
 
+    @Autowired
+    private SolicitudDniRepository solicitudDniRepository;
+
     @GetMapping("/dni")
     public String mostrarFormulario(Model model) {
         model.addAttribute("solicitud", new SolicitudDni());
-        return "dni"; // Thymeleaf template "dni.html"
+        return "dni";
     }
 
     @PostMapping("/dni")
@@ -21,12 +26,20 @@ public class DniController {
 
         if (captchaReal == null || !captchaReal.equalsIgnoreCase(solicitud.getCaptcha())) {
             model.addAttribute("errorCaptcha", "Código CAPTCHA incorrecto. Intenta de nuevo.");
-            model.addAttribute("solicitud", solicitud); // Mantener datos en el formulario
+            model.addAttribute("solicitud", solicitud);
             return "dni";
         }
 
-        // CAPTCHA correcto: continuar lógica de negocio, guardar datos, etc.
-        model.addAttribute("solicitud", solicitud);
-        return "licencia"; // página siguiente
+        // GUARDAR EN BASE DE DATOS
+        try {
+            solicitudDniRepository.save(solicitud);
+            System.out.println("✅ DNI GUARDADO: " + solicitud.getDni());
+        } catch (Exception e) {
+            System.err.println("❌ ERROR AL GUARDAR DNI: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        session.setAttribute("dni", solicitud.getDni());
+        return "redirect:/licencia";
     }
 }

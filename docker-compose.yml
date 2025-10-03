@@ -1,0 +1,6 @@
+version:'3'
+services:
+  portal:
+    build: proyectospring
+    mem_limit: 512m
+    ports: 8080

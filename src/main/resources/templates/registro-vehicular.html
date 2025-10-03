@@ -3,51 +3,832 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registro Vehicular - Permisos</title>
-    <link rel="stylesheet" th:href="@{/JS/css/registro.css}">
+  <title>Registro Vehicular - Policía Nacional del Perú</title>
+  <meta name="description" content="Registro de datos del vehículo" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --accent-green: #28a745;
+      --accent-yellow: #ffc107;
+      --accent-dark: #1a472a;
+      --border-color: #dee2e6;
+      --error-color: #dc3545;
+      --success-color: #28a745;
+      --shadow: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-hover: 0 8px 16px rgba(0,0,0,0.15);
+    }
 
-  </head>
+    [data-theme="dark"] {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --bg-card: #2d2d2d;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --accent-dark: #28a745;
+      --border-color: #404040;
+      --shadow: 0 4px 6px rgba(0,0,0,0.3);
+      --shadow-hover: 0 8px 16px rgba(0,0,0,0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.6;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--bg-card);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+
+    .container-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .branding {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .site-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .theme-toggle i {
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .breadcrumb a {
+      color: var(--accent-green);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .breadcrumb a:hover {
+      color: #218838;
+    }
+
+    .form-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .form-header .icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--accent-green), #218838);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    .form-header .icon i {
+      font-size: 2rem;
+      color: white;
+    }
+
+    .form-header h1 {
+      font-size: 1.75rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .form-group label .required {
+      color: var(--error-color);
+      margin-left: 0.25rem;
+    }
+
+    .input-icon {
+      position: relative;
+    }
+
+    .input-icon i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 3rem;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    }
+
+    .form-control.error {
+      border-color: var(--error-color);
+    }
+
+    .form-control:disabled,
+    .form-control[readonly] {
+      background: var(--bg-secondary);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: none;
+      font-weight: 500;
+    }
+
+    .form-control.error + .error-message {
+      display: block;
+    }
+
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .alert-error {
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid var(--error-color);
+      color: var(--error-color);
+    }
+
+    .alert-success {
+      background: rgba(40, 167, 69, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+
+    .alert i {
+      font-size: 1.25rem;
+    }
+
+    /* Info Box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(33, 136, 56, 0.05));
+      border: 1px solid var(--accent-green);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-box h3 {
+      color: var(--accent-green);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .info-box ul {
+      margin-left: 1.5rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* Form Grid */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Camera Section */
+    .camera-section {
+      background: var(--bg-secondary);
+      border: 2px dashed var(--border-color);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .camera-section i {
+      font-size: 3rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .camera-section p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    /* Buttons */
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--border-color);
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--accent-green);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border-color);
+    }
+
+    .btn-camera {
+      background: var(--accent-yellow);
+      color: #212529;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .btn-camera:hover {
+      background: #e0a800;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--accent-dark);
+      color: white;
+      padding: 2rem;
+      margin-top: 4rem;
+      text-align: center;
+    }
+
+    footer p {
+      opacity: 0.9;
+      margin: 0.25rem 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+        margin: 2rem auto;
+      }
+
+      .form-card {
+        padding: 1.5rem;
+      }
+
+      .branding {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .logo img {
+        width: 50px;
+        height: 50px;
+      }
+
+      .site-title {
+        font-size: 1.25rem;
+      }
+
+      .form-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 45px;
+        height: 45px;
+      }
+
+      .breadcrumb {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </button>
 
-  <header>Registro Vehicular - Paso 3</header>
+  <header>
+    <div class="container-header branding">
+      <div class="logo">
+        <img src="/JS/imagenes/images.png" alt="Escudo Nacional del Perú">
+      </div>
+      <div>
+        <h1 class="site-title">Policía Nacional del Perú</h1>
+      </div>
+    </div>
+  </header>
 
   <div class="container">
-    <section class="form-container">
-      <form th:action="@{/registro-vehicular}" method="post">
-        <label for="placa">Placa del Vehículo</label>
-        <input type="text" id="placa" name="placa" maxlength="10" required 
-               th:value="${placa}" 
-               onblur="buscarDatosVehiculo()" />
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/"><i class="fas fa-home"></i> Inicio</a>
+      <span><i class="fas fa-chevron-right"></i></span>
+      <a href="/dni"><i class="fas fa-id-card"></i> Validación DNI</a>
+      <span><i class="fas fa-chevron-right"></i></span>
+      <a href="/licencia"><i class="fas fa-car"></i> Licencia</a>
+      <span><i class="fas fa-chevron-right"></i></span>
+      <span>Registro Vehicular</span>
+    </nav>
 
-        <label for="marca">Marca</label>
-        <input type="text" id="marca" name="marca" 
-               th:value="${marca}" />
+    <div class="info-box">
+      <h3><i class="fas fa-info-circle"></i> Información Importante</h3>
+      <ul>
+        <li>Ingrese la placa del vehículo para buscar datos automáticamente</li>
+        <li>Complete todos los campos obligatorios marcados con (*)</li>
+        <li>Verifique que el número de motor, serie y VIN sean correctos</li>
+        <li>La verificación con cámara es obligatoria para continuar</li>
+      </ul>
+    </div>
 
-        <label for="modelo">Modelo</label>
-        <input type="text" id="modelo" name="modelo" required
-               th:value="${modelo}" />
+    <div class="form-card">
+      <div class="form-header">
+        <div class="icon">
+          <i class="fas fa-car-side"></i>
+        </div>
+        <h1>Registro Vehicular</h1>
+        <p>Complete la información del vehículo para el trámite</p>
+      </div>
 
-        <label for="anio">Año</label>
-        <input type="number" id="anio" name="anio"
-               th:value="${anio}" />
+      <form th:action="@{/registro-vehicular}" method="post" id="vehiculoForm">
+        
+        <div class="form-group">
+          <label for="placa">
+            Placa del Vehículo <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-id-badge"></i>
+            <input 
+              type="text" 
+              id="placa" 
+              name="placa" 
+              th:value="${placa}"
+              class="form-control" 
+              placeholder="ABC-123"
+              maxlength="10"
+              required
+              onblur="buscarDatosVehiculo()"
+            />
+          </div>
+          <span class="error-message">La placa es obligatoria</span>
+        </div>
 
-        <label for="motor">Número de Motor</label>
-        <input type="text" id="motor" name="motor" required
-               th:value="${motor}" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="marca">
+              Marca <span class="required">*</span>
+            </label>
+            <div class="input-icon">
+              <i class="fas fa-trademark"></i>
+              <input 
+                type="text" 
+                id="marca" 
+                name="marca" 
+                th:value="${marca}"
+                class="form-control" 
+                placeholder="Toyota, Honda, etc."
+                required
+              />
+            </div>
+            <span class="error-message">La marca es obligatoria</span>
+          </div>
 
-        <label for="serie">Número de Serie</label>
-        <input type="text" id="serie" name="serie" required
-               th:value="${serie}" />
+          <div class="form-group">
+            <label for="modelo">
+              Modelo <span class="required">*</span>
+            </label>
+            <div class="input-icon">
+              <i class="fas fa-car"></i>
+              <input 
+                type="text" 
+                id="modelo" 
+                name="modelo" 
+                th:value="${modelo}"
+                class="form-control" 
+                placeholder="Corolla, Civic, etc."
+                required
+              />
+            </div>
+            <span class="error-message">El modelo es obligatorio</span>
+          </div>
+        </div>
 
-        <label for="vin">Número VIN</label>
-        <input type="text" id="vin" name="vin" required
-               th:value="${vin}" />
+        <div class="form-group">
+          <label for="anio">
+            Año de Fabricación <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-calendar-alt"></i>
+            <input 
+              type="number" 
+              id="anio" 
+              name="anio" 
+              th:value="${anio}"
+              class="form-control" 
+              placeholder="2020"
+              min="1900"
+              max="2025"
+              required
+            />
+          </div>
+          <span class="error-message">El año es obligatorio</span>
+        </div>
 
-        <button type="button">Abrir Cámara</button>
-        <button type="submit">Siguiente</button>
-      </form>     
-    </section>
+        <div class="form-group">
+          <label for="motor">
+            Número de Motor <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-cog"></i>
+            <input 
+              type="text" 
+              id="motor" 
+              name="motor" 
+              th:value="${motor}"
+              class="form-control" 
+              placeholder="Ingrese el número de motor"
+              required
+            />
+          </div>
+          <span class="error-message">El número de motor es obligatorio</span>
+        </div>
+
+        <div class="form-group">
+          <label for="serie">
+            Número de Serie <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-barcode"></i>
+            <input 
+              type="text" 
+              id="serie" 
+              name="serie" 
+              th:value="${serie}"
+              class="form-control" 
+              placeholder="Ingrese el número de serie"
+              required
+            />
+          </div>
+          <span class="error-message">El número de serie es obligatorio</span>
+        </div>
+
+        <div class="form-group">
+          <label for="vin">
+            Número VIN <span class="required">*</span>
+          </label>
+          <div class="input-icon">
+            <i class="fas fa-fingerprint"></i>
+            <input 
+              type="text" 
+              id="vin" 
+              name="vin" 
+              th:value="${vin}"
+              class="form-control" 
+              placeholder="17 caracteres alfanuméricos"
+              maxlength="17"
+              required
+            />
+          </div>
+          <span class="error-message">El número VIN debe tener 17 caracteres</span>
+        </div>
+
+        <div class="form-group">
+          <label>
+            Verificación Fotográfica <span class="required">*</span>
+          </label>
+          <div class="camera-section">
+            <i class="fas fa-camera"></i>
+            <p>Capture una foto del vehículo para verificación</p>
+            <button type="button" class="btn btn-camera" onclick="abrirCamara()">
+              <i class="fas fa-camera"></i>
+              Abrir Cámara
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a href="/licencia" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Volver
+          </a>
+          <button type="submit" class="btn btn-primary">
+            Siguiente
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
-<script th:src="@{/JS/js/licencia.js}" defer></script>
+
+  
+
+  <script>
+    // Theme Toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      const icon = document.getElementById('themeIcon');
+      icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      const icon = document.getElementById('themeIcon');
+      icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    });
+
+    document.getElementById('placa').addEventListener('input', function(e) {
+      this.value = this.value.toUpperCase();
+    });
+
+    //  alphanumerico
+    document.getElementById('vin').addEventListener('input', function(e) {
+      this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (this.value.length === 17) {
+        this.classList.remove('error');
+      }
+    });
+
+    document.getElementById('anio').addEventListener('input', function(e) {
+      const year = parseInt(this.value);
+      const currentYear = new Date().getFullYear();
+      if (year < 1900 || year > currentYear + 1) {
+        this.classList.add('error');
+      } else {
+        this.classList.remove('error');
+      }
+    });
+
+
+
+//VALIDACIONES
+    document.getElementById('vehiculoForm').addEventListener('submit', function(e) {
+      const placa = document.getElementById('placa').value;
+      const marca = document.getElementById('marca').value;
+      const modelo = document.getElementById('modelo').value;
+      const anio = document.getElementById('anio').value;
+      const motor = document.getElementById('motor').value;
+      const serie = document.getElementById('serie').value;
+      const vin = document.getElementById('vin').value;
+      
+      let hasError = false;
+
+      if (!placa.trim()) {
+        document.getElementById('placa').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('placa').classList.remove('error');
+      }
+
+      if (!marca.trim()) {
+        document.getElementById('marca').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('marca').classList.remove('error');
+      }
+
+      if (!modelo.trim()) {
+        document.getElementById('modelo').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('modelo').classList.remove('error');
+      }
+
+      const year = parseInt(anio);
+      const currentYear = new Date().getFullYear();
+      if (!anio || year < 1900 || year > currentYear + 1) {
+        document.getElementById('anio').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('anio').classList.remove('error');
+      }
+
+      if (!motor.trim()) {
+        document.getElementById('motor').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('motor').classList.remove('error');
+      }
+
+      if (!serie.trim()) {
+        document.getElementById('serie').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('serie').classList.remove('error');
+      }
+
+      if (vin.length !== 17) {
+        document.getElementById('vin').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('vin').classList.remove('error');
+      }
+
+      if (hasError) {
+        e.preventDefault();
+        alert('Por favor, complete todos los campos obligatorios correctamente.');
+      }
+    });
+  </script>
 </body>
 </html>
