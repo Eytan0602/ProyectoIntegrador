@@ -73,7 +73,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-                <mainClass>com.pnp.portal.PortalPnpAplication</mainClass> <!-- ⚠️ Usa tu clase real -->
+                <mainClass>com.pnp.portal.PortalPnpApplication</mainClass> <!-- ⚠️ Usa tu clase real -->
             </configuration>
 			</plugin>
 		</plugins>
