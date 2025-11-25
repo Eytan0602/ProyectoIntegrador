@@ -6,14 +6,16 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.pnp.portal.model.PermisoLunasPolarizadas;
 import com.pnp.portal.model.SolicitudDni;
 import com.pnp.portal.model.Soat;
-import com.pnp.portal.model.Licencia;
+import com.pnp.portal.model.Usuario;
 import com.pnp.portal.repository.PermisoRepository;
 import com.pnp.portal.repository.SolicitudDniRepository;
 import com.pnp.portal.repository.SoatRepository;
-import com.pnp.portal.repository.LicenciaRepository;
+import com.pnp.portal.repository.UsuarioRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class PagoController {
     private SoatRepository soatRepository;
     
     @Autowired
-    private LicenciaRepository licenciaRepository;
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping("/pago")
     public String mostrarFormularioPago(@RequestParam(required = false) String metodo,
@@ -72,28 +73,42 @@ public class PagoController {
 
         if (codigoIngresado != null && codigoIngresado.equalsIgnoreCase(codigoEsperado)) {
             
-            // ✅ CREAR REGISTRO DE PERMISO AQUÍ
+            // ✅ CREAR REGISTRO DE PERMISO CON USUARIO AUTENTICADO
             try {
                 String dni = (String) session.getAttribute("dni");
                 String placa = (String) session.getAttribute("placa");
                 
-                if (dni != null && placa != null) {
+                // Obtener usuario autenticado
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                String dniAutenticado = null;
+                
+                if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+                    dniAutenticado = auth.getName();
+                } else {
+                    // Si no está autenticado, usar el DNI de la sesión
+                    dniAutenticado = dni;
+                }
+                
+                if (dniAutenticado != null && placa != null) {
                     // Buscar datos relacionados
                     Optional<SolicitudDni> solicitudOpt = solicitudDniRepository.findById(dni);
                     Optional<Soat> soatOpt = soatRepository.findById((Long) session.getAttribute("soatId"));
+                    Optional<Usuario> usuarioOpt = usuarioRepository.findByDni(dniAutenticado);
                     
-                    if (solicitudOpt.isPresent()) {
+                    if (solicitudOpt.isPresent() && usuarioOpt.isPresent()) {
                         SolicitudDni solicitud = solicitudOpt.get();
+                        Usuario usuario = usuarioOpt.get();
                         
                         // Crear el permiso
                         PermisoLunasPolarizadas permiso = new PermisoLunasPolarizadas();
                         permiso.setDni(dni);
                         permiso.setNombreCompleto(solicitud.getNombreCompleto());
                         permiso.setPlacaVehiculo(placa);
-                        permiso.setLicenciaValida(true); // Validar según lógica
+                        permiso.setLicenciaValida(true);
                         permiso.setSoatVigente(soatOpt.isPresent() && soatOpt.get().estaVigente());
                         permiso.setEstado(PermisoLunasPolarizadas.EstadoTramite.EN_PROCESO);
                         permiso.setFechaSolicitud(LocalDate.now());
+                        permiso.setUsuario(usuario); // Asociar con usuario
                         
                         // Asociar SOAT si existe
                         if (soatOpt.isPresent()) {
@@ -102,7 +117,12 @@ public class PagoController {
                         
                         // GUARDAR EN BD
                         permisoRepository.save(permiso);
-                        System.out.println("✅ PERMISO CREADO PARA DNI: " + dni);
+                        System.out.println("✅ PERMISO CREADO PARA USUARIO: " + usuario.getNombreCompleto());
+                    } else if (!usuarioOpt.isPresent()) {
+                        // Si el usuario no existe, crear uno temporal o redirigir a registro
+                        System.err.println("❌ USUARIO NO ENCONTRADO. DEBE REGISTRARSE PRIMERO");
+                        model.addAttribute("errorCodigo", "Debe iniciar sesión o registrarse para completar el trámite");
+                        return "pago";
                     }
                 }
             } catch (Exception e) {

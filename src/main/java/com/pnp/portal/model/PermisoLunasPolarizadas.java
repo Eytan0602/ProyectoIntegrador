@@ -43,12 +43,16 @@ public class PermisoLunasPolarizadas {
     @Column(name = "motivo_denegacion", length = 300)
     private String motivoDenegacion;
 
+    // Relación con Usuario
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     // Relación con Soat
     @OneToOne
-    @JoinColumn(name = "soat_id") // FK en tu tabla
+    @JoinColumn(name = "soat_id")
     private Soat soat;
 
-    // Campos automáticos de auditoría (opcional, si quieres mapearlos)
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
@@ -61,56 +65,49 @@ public class PermisoLunasPolarizadas {
         DENEGADA
     }
 
-    // --- Getters y Setters ---
+    // Getters y Setters
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public String getDni() { return dni; }
-
     public void setDni(String dni) { this.dni = dni; }
 
     public String getNombreCompleto() { return nombreCompleto; }
-
     public void setNombreCompleto(String nombreCompleto) { this.nombreCompleto = nombreCompleto; }
 
     public String getPlacaVehiculo() { return placaVehiculo; }
-
     public void setPlacaVehiculo(String placaVehiculo) { this.placaVehiculo = placaVehiculo; }
 
     public boolean isLicenciaValida() { return licenciaValida; }
-
     public void setLicenciaValida(boolean licenciaValida) { this.licenciaValida = licenciaValida; }
 
     public boolean isSoatVigente() { return soatVigente; }
-
     public void setSoatVigente(boolean soatVigente) { this.soatVigente = soatVigente; }
 
     public EstadoTramite getEstado() { return estado; }
-
     public void setEstado(EstadoTramite estado) { this.estado = estado; }
 
     public LocalDate getFechaSolicitud() { return fechaSolicitud; }
-
     public void setFechaSolicitud(LocalDate fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
 
     public LocalDateTime getFechaResolucion() { return fechaResolucion; }
-
     public void setFechaResolucion(LocalDateTime fechaResolucion) { this.fechaResolucion = fechaResolucion; }
 
     public String getNumeroResolucion() { return numeroResolucion; }
-
     public void setNumeroResolucion(String numeroResolucion) { this.numeroResolucion = numeroResolucion; }
 
     public String getMotivoDenegacion() { return motivoDenegacion; }
-
     public void setMotivoDenegacion(String motivoDenegacion) { this.motivoDenegacion = motivoDenegacion; }
-    public Soat getSoat() {
-    return soat;
-}
 
-public void setSoat(Soat soat) {
-    this.soat = soat;
-}
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
+    public Soat getSoat() { return soat; }
+    public void setSoat(Soat soat) { this.soat = soat; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

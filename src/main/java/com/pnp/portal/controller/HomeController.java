@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping({"/", "/index"})
     public String index(Model model) {
-        model.addAttribute("titulo", "Policía Nacional del Perú");
-        return "index"; 
+        model.addAttribute("titulo", "Policía Nacional del Perú - Portal de Servicios");
+        return "index";
     }
 }

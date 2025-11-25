@@ -37,9 +37,9 @@ public class SoatController {
         // GUARDAR EN BASE DE DATOS
         try {
             soatRepository.save(soat);
-            System.out.println("✅ SOAT GUARDADO: " + soat.getNumPoliza());
+            System.out.println(" SOAT GUARDADO: " + soat.getNumPoliza());
         } catch (Exception e) {
-            System.err.println("❌ ERROR AL GUARDAR SOAT: " + e.getMessage());
+            System.err.println("ERROR AL GUARDAR SOAT: " + e.getMessage());
             e.printStackTrace();
         }
 
